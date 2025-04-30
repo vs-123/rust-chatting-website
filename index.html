@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+        <title>Rust Chatting Website</title>
+	</head>
+
+	<body>
+        <h1>Rust Chat</h1>
+
+        <pre id="messages"></pre>
+        <form id="form">
+            <input type="text" id="msgBox">
+            <input type="submit" value="Send">
+        </form>
+
+        <script>
+            const socket = new WebSocket("ws://" + window.location.host + "/ws");
+
+            socket.onmessage = msg => {
+                document.querySelector("#messages").append(msg.data + "\n");
+            };
+
+            document.querySelector("form").addEventListener('submit', e => {
+                e.preventDefault();
+                const msgBox = document.querySelector("#msgBox");
+                socket.send(msgBox.value);
+                msgBox.value = "";
+            });
+        </script>
+	</body>
+</html>
